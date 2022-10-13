@@ -45,7 +45,6 @@ public class Restaurant {
             ObjectMapper mapper = new ObjectMapper();
             Restaurant[] restaurants = mapper.readValue(url, Restaurant[].class);
             if(restaurants.length !=0 ) {
-                System.out.println("The server responded with the restaurant list");
                 return restaurants;
             }
         }

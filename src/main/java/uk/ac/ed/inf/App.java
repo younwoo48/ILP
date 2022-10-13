@@ -14,6 +14,17 @@ import java.net.URL;
 public class App 
 {
     public static void main( String[] args ) throws MalformedURLException {
+        LngLat t1 = new LngLat(23,67.6);
+        LngLat t2 = new LngLat(-3.19,55.945);
+        LngLat t3 = new LngLat(-4,55.943);
+        LngLat t4 = new LngLat(-3.19,67.6);
+        System.out.println(t1.inCentralArea());
+        System.out.println(t2.inCentralArea());
+        System.out.println(t3.inCentralArea());
+        System.out.println(t4.inCentralArea());
+
+
+
         Restaurant [] participants = Restaurant.getRestaurantsFromRestServer(new URL("https://ilp-rest.azurewebsites.net"));
         try {
             URL url = new URL("https://ilp-rest.azurewebsites.net/orders");

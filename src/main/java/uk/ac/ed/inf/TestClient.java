@@ -16,7 +16,7 @@ public class TestClient {
             if (!baseUrl.endsWith("/")) {
                 baseUrl += "/";
             }
-            // we c a l l the t e s t endpoint and pass in some t e s t data which w i l l be echoed
+
             URL url = new URL(baseUrl + "test/" + echoBasis);
             TestResponse response = new ObjectMapper().readValue(new URL(baseUrl + "test/" + echoBasis), TestResponse.class);
 

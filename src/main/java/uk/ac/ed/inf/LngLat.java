@@ -1,5 +1,12 @@
 package uk.ac.ed.inf;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 import java.lang.Math;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static java.lang.Math.min;
 
 public class LngLat {
     public double lng;
@@ -8,16 +15,63 @@ public class LngLat {
         this.lng = lng;
         this.lat = lat;
     }
+
+    /**
+     *
+     * @param x,y The coordinate of the point to check
+     * @param x1,y1,x2,y2 The coordinates of the two points making the edge
+     *
+     * @return True if the right vertical line that passes through x,y meet the edge.
+     */
+    private boolean passEdge(double x, double y, double x1, double y1, double x2, double y2){
+        double boty = Math.min(y1,y2);
+        double topy = Math.max(y1,y2);
+        if(y<=boty || y>=topy){
+            return false;
+        }
+        if(x2 == x1){
+            if(x1>x) {
+                return true;
+            }
+            return false;
+        }
+        double a = (y2-y1)/(x2-x1);
+        double b = y1 - a*x1;
+        double p = (y-b)/a;
+        if(p>x){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * inCentralArea
-        true if the point is in Central Area else false
+        true if the point is in Central Area else false. Uses Basic Ray tracing algorithm to see if the point is in the Polygon.
         @return Boolean type
      */
     public boolean inCentralArea(){
-        if(55.942617<lat && lat<55.946233){
-            if(-3.192473<lng && lng<-3.184319){
-                return true;
+
+        try {
+            URL url = new URL("https://ilp-rest.azurewebsites.net/centralArea");
+            ObjectMapper mapper = new ObjectMapper();
+            Point[] corners = mapper.readValue(url, Point[].class);
+            int n = corners.length;
+            if(n >= 3) {
+                int edge_passes = 0;
+                for(int i=0; i< n; i++) {
+                    if (passEdge(this.lng, this.lat, corners[i].longitude, corners[i].latitude, corners[(i + 1) % n].longitude, corners[(i + 1) % n].latitude)) {
+                        edge_passes++;
+                    }
+                }
+                if(edge_passes%2==1){
+                    return true;
+                }
             }
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }
