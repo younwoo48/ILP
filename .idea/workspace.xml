@@ -4,13 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd6e4b39-87cc-4fd9-9580-954273eab7ad" name="Changes" comment="CW1">
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Point.java" afterDir="false" />
+    <list default="true" id="bd6e4b39-87cc-4fd9-9580-954273eab7ad" name="Changes" comment="Added polygon feature">
+      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Area.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/CentralArea.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Direction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/IlpRestClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/InvalidOrderException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/InvalidPizzaCombinationException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/LngLat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/LngLat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Point.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Restaurant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/Restaurant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/TestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/ac/ed/inf/TestClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +74,9 @@
       <workItem from="1664973204412" duration="23022000" />
       <workItem from="1665404188429" duration="866000" />
       <workItem from="1665493905596" duration="6251000" />
-      <workItem from="1665578986228" duration="4732000" />
+      <workItem from="1665578986228" duration="4959000" />
+      <workItem from="1669756563898" duration="9752000" />
+      <workItem from="1669774757934" duration="9748000" />
     </task>
     <task id="LOCAL-00001" summary="Start">
       <created>1663843029997</created>
@@ -90,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665243179900</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added polygon feature">
+      <created>1665678497202</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1665678497202</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -111,6 +127,7 @@
     <MESSAGE value="Start" />
     <MESSAGE value="LngLat" />
     <MESSAGE value="CW1" />
-    <option name="LAST_COMMIT_MESSAGE" value="CW1" />
+    <MESSAGE value="Added polygon feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added polygon feature" />
   </component>
 </project>

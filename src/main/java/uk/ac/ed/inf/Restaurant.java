@@ -4,13 +4,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class Restaurant {
+    @JsonProperty("menu")
     public Menu[] menu;
+    @JsonProperty("name")
     public String name;
+    @JsonProperty("longitude")
     public double longitude;
+    @JsonProperty("latitude")
     public double latitude;
 
     /**
@@ -38,21 +44,14 @@ public class Restaurant {
      * @exception IOException
      * @return The restaurants that are participating, null if an Exception was found
      */
-    public static Restaurant[] getRestaurantsFromRestServer(URL serverBaseAddress)
+    public static Restaurant[] getRestaurantsFromRestServer(String serverBaseAddress)
     {
+        IlpRestClient restClient = null;
         try {
-            URL url = new URL(serverBaseAddress + "/restaurants");
-            ObjectMapper mapper = new ObjectMapper();
-            Restaurant[] restaurants = mapper.readValue(url, Restaurant[].class);
-            if(restaurants.length !=0 ) {
-                return restaurants;
-            }
+            restClient = new IlpRestClient(new URL(serverBaseAddress));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-        e.printStackTrace();
-        }
-        return null;
+        return restClient.deserialize("/restaurants", Restaurant[].class);
     }
 }

@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Hello world!
@@ -13,35 +15,22 @@ import java.net.URL;
  */
 public class App 
 {
-    public static void main( String[] args ) throws MalformedURLException {
-        LngLat t1 = new LngLat(23,67.6);
-        LngLat t2 = new LngLat(-3.19,55.945);
-        LngLat t3 = new LngLat(-4,55.943);
-        LngLat t4 = new LngLat(-3.19,67.6);
-        System.out.println(t1.inCentralArea());
-        System.out.println(t2.inCentralArea());
-        System.out.println(t3.inCentralArea());
-        System.out.println(t4.inCentralArea());
-
-
-
-        Restaurant [] participants = Restaurant.getRestaurantsFromRestServer(new URL("https://ilp-rest.azurewebsites.net"));
-        try {
-            URL url = new URL("https://ilp-rest.azurewebsites.net/orders");
-            ObjectMapper mapper = new ObjectMapper();
-            Order[] orders = mapper.readValue(url, Order[].class);
-            if(orders.length !=0 ) {
-                System.out.println("The server responded with the order list");
-                for(Order order: orders){
-                    System.out.println(order.getDeliveryCost());
-                }
+    public ArrayList<Direction> findDirection(LngLat start,LngLat finish){
+        ArrayList<LngLat> open = new ArrayList<LngLat>();
+        open.add(start);
+        HashMap<LngLat,Double> from = new HashMap<LngLat,Double>();
+        HashMap<LngLat,Double> gScore = new HashMap<LngLat,Double>();
+        gScore.put(start,0.0);
+        HashMap<LngLat,Double> hScore = new HashMap<LngLat,Double>();
+        hScore.put(start,finish.distanceTo(start));
+        while(open.size()>0){
+            LngLat current = open.get(0);
+            double least = gScore.get(current)+hScore.get(current);
+            for(LngLat node:open){
+                if(node
             }
         }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
+
+
 }
