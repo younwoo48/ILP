@@ -25,4 +25,5 @@ public enum Direction {
     Direction(double angle){this.angle = angle;}
     public double angle() {return angle;}
 
+
 }
