@@ -5,11 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class Area {
-    private Point[] points;
-    public Area(Point[] points){
-        this.points = points;
-    }
+    @JsonProperty("name")
+    public String name;
+    @JsonProperty("coordinates")
+    public Point[] coordinates;
+
+    public Area(Point[] coordinates){this.coordinates = coordinates;}
     public Point[] getPoints() {
-        return points;
+        return coordinates;
     }
+
 }

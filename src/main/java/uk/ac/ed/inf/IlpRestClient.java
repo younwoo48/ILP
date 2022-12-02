@@ -1,5 +1,6 @@
 package uk.ac.ed.inf;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.Feature;
@@ -70,15 +71,15 @@ public class IlpRestClient
         FeatureCollection featureCollection = new FeatureCollection();
         ArrayList<LngLatAlt> geo_position = new ArrayList<LngLatAlt>();
         for (LngLat position: positions){
-            featureCollection.add(new LineString())
+
             geo_position.add(new LngLatAlt(position.lng, position.lat));
         }
 
-        LineString lines = new LineString();
-        lines.fromLngLats();
-        featureCollection.add();
+        LineString lines = new LineString(geo_position.toArray(new LngLatAlt[0]));
 
-        String json= new ObjectMapper().writeValueAsString(featureCollection);
+
+        String json= new ObjectMapper().writeValueAsString(lines);
+        System.out.println(json);
     }
 
 
