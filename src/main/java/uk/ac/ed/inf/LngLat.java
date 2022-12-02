@@ -98,8 +98,15 @@ public class LngLat {
         return false;
     }
 
+    public boolean veryClose(LngLat point){
+        if (distanceTo(point) < TOLERANCE*0.1) {
+            return true;
+        }
+        return false;
+    }
+
     /**
-     * closeTo
+     * nextPosition
      *
      * @param d Direction type value that is the angle of travel
      *          Finds the next position of drone after traveling to the given angle

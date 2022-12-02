@@ -1,13 +1,19 @@
 package uk.ac.ed.inf;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+import org.geojson.LineString;
+import org.geojson.LngLatAlt;
+import org.geojson.jackson.LngLatAltSerializer;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.util.ArrayList;
 
 
 public class IlpRestClient
@@ -58,6 +64,21 @@ public class IlpRestClient
             e.printStackTrace();
         }
         return response;
+    }
+
+    public void createFlightPath(ArrayList<LngLat> positions) throws JsonProcessingException {
+        FeatureCollection featureCollection = new FeatureCollection();
+        ArrayList<LngLatAlt> geo_position = new ArrayList<LngLatAlt>();
+        for (LngLat position: positions){
+            featureCollection.add(new LineString())
+            geo_position.add(new LngLatAlt(position.lng, position.lat));
+        }
+
+        LineString lines = new LineString();
+        lines.fromLngLats();
+        featureCollection.add();
+
+        String json= new ObjectMapper().writeValueAsString(featureCollection);
     }
 
 
