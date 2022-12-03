@@ -42,7 +42,6 @@ public class NoFlyZone {
     public boolean intersects(LngLat start, LngLat end) {
         int n = coordinates.length;
         if (n >= 3) {
-            int edge_passes = 0;
             for (int i = 0; i < n; i++) {
                 if (doesIntersect(start, end, coordinates[i][0], coordinates[i][1], coordinates[(i + 1) % n][0], coordinates[(i + 1) % n][1])){
                     return true;
