@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,9 +19,16 @@ import java.util.HashMap;
  * Hello world!
  */
 public class App {
-    public static ArrayList<Direction> directions = new ArrayList<Direction>(Arrays.asList(Direction.East,Direction.EastNorthEast,Direction.NorthEast,Direction.NorthNorthEast,Direction.North,Direction.NorthNorthWest,Direction.NorthWest,Direction.WestNorthWest,
+    private static int turns = 0;
+    private final static int BATTERY = 2000;
+    private static ArrayList<Direction> directions = new ArrayList<Direction>(Arrays.asList(Direction.East,Direction.EastNorthEast,Direction.NorthEast,Direction.NorthNorthEast,Direction.North,Direction.NorthNorthWest,Direction.NorthWest,Direction.WestNorthWest,
             Direction.West, Direction.WestSouthWest, Direction.SouthWest,Direction.SouthSouthWest,Direction.South,Direction.SouthSouthEast,Direction.SouthEast,Direction.EastSouthEast,Direction.East));
-    public static NoFlyZone[] no_fly_areas;
+    private static NoFlyZone[] no_fly_zones;
+    private static ArrayList<Area> no_fly_areas = new ArrayList<Area>();
+    private static LngLat appleton = new LngLat(-3.186874,55.944494);
+    private static ArrayList<Node> totalPath = new ArrayList<Node>();
+
+
     private static void noFlyAreas(){
         IlpRestClient restClient = null;
         try {
@@ -26,13 +36,22 @@ public class App {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-        no_fly_areas = restClient.deserialize("/noFlyZones",NoFlyZone[].class);
+        no_fly_zones = restClient.deserialize("/noFlyZones",NoFlyZone[].class);
+        for(NoFlyZone no_fly_zone: no_fly_zones){
+            no_fly_areas.add(no_fly_zone.getArea());
+        }
 
     }
     private static boolean isAllowed(LngLat current, LngLat neighbor){
-        for(NoFlyZone noFlyZone:no_fly_areas){
-            if(noFlyZone.intersects(current,neighbor)){
-                return false;
+        double lng_diff = neighbor.lng- current.lng;
+        double lat_diff = neighbor.lat - current.lat;
+        for(Area no_fly_area:no_fly_areas){
+
+            for(int i=1;i<=5;i++){
+                LngLat point = new LngLat((current.lng+(lng_diff*i)/5),(current.lat+(lat_diff*i)/5));
+                if(point.inArea(no_fly_area)){
+                    return false;
+                }
             }
         }
         return true;
@@ -40,56 +59,23 @@ public class App {
 
 
 
-    private static ArrayList<LngLat> reconstruct(Node goal, Node start){
-        ArrayList<LngLat> path = new ArrayList<LngLat>();
+    private static ArrayList<Node> reconstruct(Node goal, Node start){
+        ArrayList<Node> path = new ArrayList<Node>();
         while(!goal.equals(start)){
-            path.add(goal.lnglat);
+            path.add(goal);
             goal = goal.comeFrom;
         }
+        path.add(goal);
+        Collections.reverse(path);
         return path;
     }
-    public static boolean containsHash(HashMap<LngLat,Double> map, LngLat target){
-        for(LngLat node: map.keySet()){
-            if(node.veryClose(target)){
-                return true;
-            }
-        }
-        return false;
-    }
-    public static boolean containsArray(ArrayList<LngLat> map, LngLat target){
-        for(LngLat node: map){
-            if(node.veryClose(target)){
-                return true;
-            }
-        }
-        return false;
-    }
-    public static HashMap<LngLat,Double> put(HashMap<LngLat,Double> map, LngLat target, double value){
-        for(LngLat node: map.keySet()){
-            if(node.veryClose(target)){
-                map.put(node,value);
-                return map;
-            }
-        }
-        map.put(target,value);
-        return map;
-    }
-    public static Double get(HashMap<LngLat,Double> map, LngLat target){
-        for(LngLat node: map.keySet()){
-            if(node.veryClose(target)){
-                return map.get(node);
-            }
-        }
-        return null;
-    }
 
 
-    public static ArrayList<LngLat> findDirection (LngLat start, LngLat finish){
+    public static ArrayList<Node> findDirection (LngLat start, LngLat finish){
         ArrayList<Node> open = new ArrayList<Node>();
         ArrayList<Node> visited = new ArrayList<Node>();
         Node start_node = new Node(start,finish);
         open.add(start_node);
-
         while (!open.isEmpty()) {
             Node current = open.get(0);
             double least = current.fScore;
@@ -99,42 +85,73 @@ public class App {
                     least = node.fScore;
                 }
             }
-            System.out.println(current.lnglat.lng);
             if (current.lnglat.closeTo(finish)) {
                 return reconstruct(current,start_node);
             }
+            visited.add(current);
             open.remove(current);
             for(Direction d: directions){
                 Node neighbor = new Node(current, d, finish);
                 if(isAllowed(current.lnglat,neighbor.lnglat)) {
-                    open.add(neighbor);
+                    boolean visit = false;
+                    for(Node visits : visited){
+                        if(visits.isSameTo(neighbor)){
+                            if(visits.fScore>neighbor.fScore){
+                                visits.changeG(neighbor.gScore);
+                            }
+                            visit = true;
+                            break;
+                        }
+                    }
+                    if(!visit){
+                        open.add(neighbor);
+                    }
                 }
             }
         }
         return null;
     }
-    public static void main(String[] args) throws MalformedURLException, JsonProcessingException {
+    public static void main(String[] args) throws IOException, InvalidPizzaCombinationException, InvalidOrderException {
         Restaurant[] restaurants =  Restaurant.getRestaurantsFromRestServer("https://ilp-rest.azurewebsites.net");
-        LngLat start = new LngLat(restaurants[1].longitude, restaurants[1].latitude);
-        LngLat end = new LngLat(restaurants[2].longitude, restaurants[2].latitude);
-        System.out.println(end.lng);
-        System.out.println(end.lat);
         noFlyAreas();
-        /**ArrayList<LngLat> path = findDirection(start,end);
-        for(LngLat node:path){
-            System.out.println(node.lng);
-            System.out.println(node.lat);
-        }
         IlpRestClient restClient = null;
         try {
             restClient = new IlpRestClient(new URL("https://ilp-rest.azurewebsites.net"));
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-        restClient.createFlightPath(path);
-        System.out.println(no_fly_areas[0].coordinates[0][0]);
-        */
-        NoFlyZone
+
+        for(int i=1;i<=12;i++){
+            LocalDate date = LocalDate.of(2023,1,i);
+            String date_string = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
+            Order[] orders = restClient.deserialize("/orders/"+date_string,Order[].class);
+            ArrayList<FlightPath> flight_path = new ArrayList<FlightPath>();
+            for(Order order: orders){
+                if(order.getDeliveryCost()!=0){
+                    ArrayList<Node> thisPath = new ArrayList<Node>();
+                    thisPath.addAll(findDirection(appleton,order.restaurant.getLngLat()));
+                    thisPath.add(new Node(order.restaurant.getLngLat(),appleton));
+                    thisPath.addAll(findDirection(order.restaurant.getLngLat(),appleton));
+                    if(turns+thisPath.size()<=BATTERY){
+                        order.orderDelivered();
+                        totalPath.addAll(thisPath);
+                        int tick = turns;
+                        for(Node node: thisPath){
+                            flight_path.add(new FlightPath(order.orderNo,node.comeFrom.lnglat.lng,node.comeFrom.lnglat.lat,node.direction,node.lnglat.lng,node.lnglat.lat,tick));
+                        tick +=1;
+                        }
+                        turns = turns + thisPath.size()+2;
+                    }
+                }
+            }
+            restClient.recordDrone(totalPath, date_string);
+            restClient.recordDelivery(orders, date_string);
+            restClient.recordFlightPath(flight_path,date_string);
+            turns = 0;
+        }
+
+
+
     }
 
 

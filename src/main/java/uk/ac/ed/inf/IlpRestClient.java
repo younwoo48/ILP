@@ -10,10 +10,13 @@ import org.geojson.LngLatAlt;
 import org.geojson.jackson.LngLatAltSerializer;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -67,20 +70,31 @@ public class IlpRestClient
         return response;
     }
 
-    public void createFlightPath(ArrayList<LngLat> positions) throws JsonProcessingException {
-        FeatureCollection featureCollection = new FeatureCollection();
+    public void recordDrone(ArrayList<Node> positions, String date) throws IOException {
+
         ArrayList<LngLatAlt> geo_position = new ArrayList<LngLatAlt>();
-        for (LngLat position: positions){
+        for (Node position: positions){
 
-            geo_position.add(new LngLatAlt(position.lng, position.lat));
+            geo_position.add(new LngLatAlt(position.lnglat.lng, position.lnglat.lat));
         }
-
         LineString lines = new LineString(geo_position.toArray(new LngLatAlt[0]));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(new File("drone-"+date+".geojson"),lines);
 
-
-        String json= new ObjectMapper().writeValueAsString(lines);
-        System.out.println(json);
     }
+    public void recordDelivery(Order[] orders, String date) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
+        for(Order order:orders){
+            deliveries.add(new Delivery(order.orderNo, order.orderStatus, order.pizzaPrice));
+        }
+        mapper.writeValue(new File("deliveries-"+date+".json"),deliveries);
 
+    }
+    public void recordFlightPath(ArrayList<FlightPath> flightPaths, String date) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
 
+        mapper.writeValue(new File("flightpath-"+date+".json"),flightPaths);
+
+    }
 }

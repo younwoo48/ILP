@@ -11,6 +11,7 @@ public class Area {
     public Point[] coordinates;
 
     public Area(Point[] coordinates){this.coordinates = coordinates;}
+
     public Point[] getPoints() {
         return coordinates;
     }

@@ -54,4 +54,7 @@ public class Restaurant {
         }
         return restClient.deserialize("/restaurants", Restaurant[].class);
     }
+    public LngLat getLngLat(){
+        return new LngLat(longitude,latitude);
+    }
 }

@@ -13,4 +13,8 @@ public class Point {
     public double longitude;
     @JsonProperty("latitude")
     public double latitude;
+    public Point(double lng, double lat){
+        this.longitude = lng;
+        this.latitude = lat;
+    }
 }

@@ -54,8 +54,8 @@ public class LngLat {
      *
      * @return Boolean type
      */
-    public boolean inCentralArea() {
-        var corners = CentralArea.getInstance("").getArea().getPoints();
+    public boolean inArea(Area area) {
+        var corners = area.getPoints();
         int n = corners.length;
         if (n >= 3) {
             int edge_passes = 0;
@@ -68,8 +68,6 @@ public class LngLat {
                 return true;
             }
         }
-
-
         return false;
     }
 
@@ -121,14 +119,6 @@ public class LngLat {
         LngLat next_position = new LngLat(next_lng, next_lat);
         return next_position;
     }
-    public LngLat previousPosition(Direction d) {
-        if (d == null) {
-            return this;
-        }
-        double previous_lng = lng - MOVE_DISTANCE * Math.cos(Math.toRadians(d.angle()));
-        double previous_lat = lat - MOVE_DISTANCE * Math.sin(Math.toRadians(d.angle()));
-        LngLat previous_position = new LngLat(previous_lng, previous_lat);
-        return previous_position;
-    }
+
 
 }
