@@ -12,19 +12,19 @@ public class Order {
     @JsonProperty("orderNo")
     public String orderNo;
     @JsonProperty("orderDate")
-    public String orderDate;
+    private String orderDate;
     @JsonProperty("customer")
-    public String customer;
+    private String customer;
     @JsonProperty("creditCardNumber")
-    public String creditCardNumber;
+    private String creditCardNumber;
     @JsonProperty("creditCardExpiry")
-    public String creditCardExpiry;
+    private String creditCardExpiry;
     @JsonProperty("cvv")
-    public String cvv;
+    private String cvv;
     @JsonProperty("priceTotalInPence")
-    public int priceTotalInPence;
+    private int priceTotalInPence;
     @JsonProperty("orderItems")
-    public String[] orderItems;
+    private String[] orderItems;
     @JsonProperty("orderStatus")
     public OrderOutcome orderStatus;
     @JsonProperty("costInPence")
@@ -32,7 +32,10 @@ public class Order {
 
     public Restaurant restaurant=null;
 
-
+    /**
+     * Check the details of credit card and changes the order outcome accordingly
+     *
+     */
     private OrderOutcome creditCardCheck() {
         if (creditCardNumber.length() != 16) {
             return OrderOutcome.InvalidCardNumber;

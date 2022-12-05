@@ -2,14 +2,16 @@ package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-
 public class NoFlyZone {
     @JsonProperty("name")
     public String name;
     @JsonProperty("coordinates")
     public Double[][] coordinates;
 
+    /**
+     * Changes the instance of this NoFlyZone to an Area instance
+     * @return
+     */
     public Area getArea(){
         Point[] points = new Point[coordinates.length];
         int i = 0;

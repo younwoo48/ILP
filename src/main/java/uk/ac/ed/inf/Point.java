@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /*
 Class to parse with the JSON
  */
-public class Point {
+public class Point { //Used to parse
     @JsonProperty("name")
     public String name;
     @JsonProperty("longitude")

@@ -19,20 +19,6 @@ public class Restaurant {
     @JsonProperty("latitude")
     public double latitude;
 
-    /**
-     * containsMenu
-     * @param possible_menu the menus to check
-     * Checks if all the possible_menu is actually available in this restaurant
-     * @return true if the restaurant has the menu, false if else.
-     */
-    public boolean containsMenu(Menu possible_menu){
-        for(Menu option: this.menu){
-            if(option.equals(possible_menu)){
-                return true;
-            }
-        }
-        return false;
-    }
     public Menu[] getMenu(){
         return menu;
     }
@@ -54,7 +40,7 @@ public class Restaurant {
         }
         return restClient.deserialize("/restaurants", Restaurant[].class);
     }
-    public LngLat getLngLat(){
+    public LngLat getLngLat(){ //Return the LngLat of this Restaurant
         return new LngLat(longitude,latitude);
     }
 }

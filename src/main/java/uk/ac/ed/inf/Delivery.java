@@ -1,8 +1,7 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class Delivery {
+public class Delivery { //Delivery Class used to output the delivery.json
     @JsonProperty("orderNo")
     public String orderNo;
     @JsonProperty("outcome")

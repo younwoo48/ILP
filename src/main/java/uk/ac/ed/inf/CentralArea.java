@@ -2,8 +2,8 @@ package uk.ac.ed.inf;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
+// Class for Central Area
 public class CentralArea {
 
     private static final String defaultEndpoint = "https://ilp-rest.azurewebsites.net";
@@ -30,6 +30,7 @@ public class CentralArea {
         }
         return instance;
     }
+    //Returns the Central Area Instance as Area type
     public Area getArea(){
         Point[] points = new IlpRestClient(baseUrl).deserialize("/centralArea", Point[].class);
         Area area = new Area(points);

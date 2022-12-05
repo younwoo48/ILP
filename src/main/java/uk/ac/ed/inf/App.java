@@ -15,20 +15,21 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
-/**
- * Hello world!
- */
+
 public class App {
-    private static int turns = 0;
-    private final static int BATTERY = 2000;
+    private static int turns = 0; //Steps the drone took
+    private final static int BATTERY = 2000; //Steps the drone can take every day
+    //List of Available Directions for travel
     private static ArrayList<Direction> directions = new ArrayList<Direction>(Arrays.asList(Direction.East,Direction.EastNorthEast,Direction.NorthEast,Direction.NorthNorthEast,Direction.North,Direction.NorthNorthWest,Direction.NorthWest,Direction.WestNorthWest,
             Direction.West, Direction.WestSouthWest, Direction.SouthWest,Direction.SouthSouthWest,Direction.South,Direction.SouthSouthEast,Direction.SouthEast,Direction.EastSouthEast,Direction.East));
-    private static NoFlyZone[] no_fly_zones;
-    private static ArrayList<Area> no_fly_areas = new ArrayList<Area>();
-    private static LngLat appleton = new LngLat(-3.186874,55.944494);
-    private static ArrayList<Node> totalPath = new ArrayList<Node>();
+    private static NoFlyZone[] no_fly_zones; //The Array of the no fly zones
+    private static ArrayList<Area> no_fly_areas = new ArrayList<Area>(); //The list of the no fly zones as Area type
+    private static LngLat appleton = new LngLat(-3.186874,55.944494); // Coordinates of Appleton Tower
 
 
+    /**
+     * Generate no_fly_areas() in Area type
+     */
     private static void noFlyAreas(){
         IlpRestClient restClient = null;
         try {
@@ -42,13 +43,18 @@ public class App {
         }
 
     }
+    /**@param current,neighbor The LngLat value of the two points in stake
+     * Divides the line between two points into sections and checks if each point is not inside the NoFlyZones
+     * @return boolean
+     */
     private static boolean isAllowed(LngLat current, LngLat neighbor){
         double lng_diff = neighbor.lng- current.lng;
         double lat_diff = neighbor.lat - current.lat;
+        int sections = 20;
         for(Area no_fly_area:no_fly_areas){
 
-            for(int i=1;i<=5;i++){
-                LngLat point = new LngLat((current.lng+(lng_diff*i)/5),(current.lat+(lat_diff*i)/5));
+            for(int i=1;i<=sections;i++){
+                LngLat point = new LngLat((current.lng+(lng_diff*i)/sections),(current.lat+(lat_diff*i)/sections));
                 if(point.inArea(no_fly_area)){
                     return false;
                 }
@@ -56,9 +62,10 @@ public class App {
         }
         return true;
     }
-
-
-
+    /**@param goal,start The Node value of the start and end of the constructed path
+     * Uses the Node's ComeFrom method to find which back track the path
+     * @return path of list of Nodes
+     */
     private static ArrayList<Node> reconstruct(Node goal, Node start){
         ArrayList<Node> path = new ArrayList<Node>();
         while(!goal.equals(start)){
@@ -66,12 +73,17 @@ public class App {
             goal = goal.comeFrom;
         }
         path.add(goal);
-        Collections.reverse(path);
+        Collections.reverse(path); //Reverses Path to make it go from start -> end
         return path;
     }
 
-
-    public static ArrayList<Node> findDirection (LngLat start, LngLat finish){
+    /**@param start,finish The LngLat value of the start and finish destination
+     * Uses A* Search to find an optimal path from start to finish
+     * Uses two lists, open and visited, the function goes through the open list in the order of fScore and adds to visited.
+     * Then goes through all 16 directions to see if nodes with better fScores exist.
+     * @return The Path found
+     */
+    private static ArrayList<Node> findDirection (LngLat start, LngLat finish){
         ArrayList<Node> open = new ArrayList<Node>();
         ArrayList<Node> visited = new ArrayList<Node>();
         Node start_node = new Node(start,finish);
@@ -111,8 +123,12 @@ public class App {
         }
         return null;
     }
+    /**
+     * Main function of the app
+     * Validates the orders, then finds a path for the drone to follow
+     * Finally creating 3 different files for the flight path, drone movement, and the deliveries
+     */
     public static void main(String[] args) throws IOException, InvalidPizzaCombinationException, InvalidOrderException {
-        Restaurant[] restaurants =  Restaurant.getRestaurantsFromRestServer("https://ilp-rest.azurewebsites.net");
         noFlyAreas();
         IlpRestClient restClient = null;
         try {
@@ -120,12 +136,12 @@ public class App {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-
-        for(int i=1;i<=12;i++){
+        ArrayList<FlightPath> flightPath = new ArrayList<FlightPath>(); //List to store the flight paths, gets emptied every day
+        ArrayList<Node> totalPath = new ArrayList<Node>(); //List that stores the path in nodes
+        for(int i=1;i<=12;i++){ //For loop accounting for the 12 days in January
             LocalDate date = LocalDate.of(2023,1,i);
             String date_string = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")).toString();
             Order[] orders = restClient.deserialize("/orders/"+date_string,Order[].class);
-            ArrayList<FlightPath> flight_path = new ArrayList<FlightPath>();
             for(Order order: orders){
                 if(order.getDeliveryCost()!=0){
                     ArrayList<Node> thisPath = new ArrayList<Node>();
@@ -137,7 +153,7 @@ public class App {
                         totalPath.addAll(thisPath);
                         int tick = turns;
                         for(Node node: thisPath){
-                            flight_path.add(new FlightPath(order.orderNo,node.comeFrom.lnglat.lng,node.comeFrom.lnglat.lat,node.direction,node.lnglat.lng,node.lnglat.lat,tick));
+                            flightPath.add(new FlightPath(order.orderNo,node.comeFrom.lnglat.lng,node.comeFrom.lnglat.lat,node.direction,node.lnglat.lng,node.lnglat.lat,tick));
                         tick +=1;
                         }
                         turns = turns + thisPath.size()+2;
@@ -146,8 +162,11 @@ public class App {
             }
             restClient.recordDrone(totalPath, date_string);
             restClient.recordDelivery(orders, date_string);
-            restClient.recordFlightPath(flight_path,date_string);
+            restClient.recordFlightPath(flightPath,date_string);
             turns = 0;
+            flightPath.clear();
+            totalPath.clear();
+
         }
 
 

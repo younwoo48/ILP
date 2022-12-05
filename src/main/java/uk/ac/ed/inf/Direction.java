@@ -1,6 +1,6 @@
 package uk.ac.ed.inf;
 
-public enum Direction {
+public enum Direction { //Direction class for the 16 directions the drone could travel in
     North(90),
     NorthNorthEast(67.5),
     NorthEast(45),

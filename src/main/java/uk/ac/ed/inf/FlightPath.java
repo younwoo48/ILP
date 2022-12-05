@@ -2,7 +2,7 @@ package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class FlightPath {
+public class FlightPath { //Flight path class to parse with the flightpath.json file
     @JsonProperty("orderNo")
     public String orderNo;
     @JsonProperty("fromLongitude")

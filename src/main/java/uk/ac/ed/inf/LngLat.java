@@ -1,16 +1,7 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 import java.lang.Math;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-
-import static java.lang.Math.min;
-
 public class LngLat {
     public double lng;
     public double lat;
