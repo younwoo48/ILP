@@ -133,6 +133,7 @@ public class Order {
                         try {
                             throw new InvalidPizzaCombinationException();
                         } catch(InvalidPizzaCombinationException e){
+                            pizzaPrice = 0;
                             return 0;
                         }
 

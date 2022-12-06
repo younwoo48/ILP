@@ -3,9 +3,7 @@ package uk.ac.ed.inf;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.geojson.LineString;
 import org.geojson.LngLatAlt;
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,34 +18,6 @@ public class IlpRestClient //Class to get live data from the Ilp REST Server or 
     }
     public URL getBaseUrl() {return baseUrl;}
 
-    /**
-     * @param fromEndpoint The link to the file that's being reached
-     * @param toFilename The file name to download to
-     * Downloads the file on the endpoint at the ILP REST server
-     */
-    public void download(String fromEndpoint, String toFilename){
-        URL finalURL = null;
-
-        try{
-            finalURL=new URL(baseUrl.toString() + fromEndpoint);
-        } catch (MalformedURLException e) {
-            System.err.println("URL in invalid : " + baseUrl + fromEndpoint);
-            System.exit(2);
-        }
-        try (BufferedInputStream in = new BufferedInputStream(finalURL.openStream());
-             FileOutputStream fileOutputStream =
-                     new FileOutputStream(fromEndpoint, false)){
-            var dataBuffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer,0,1024)) != -1){
-                fileOutputStream.write(dataBuffer,0,bytesRead);
-            }
-
-            System.out.println("File was written at: " + toFilename);
-        } catch(IOException e){
-            System.err.format("Error loading file: %s from %s -> %s", fromEndpoint, finalURL,e);
-        }
-    }
 
     /**
      *

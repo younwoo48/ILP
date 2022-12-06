@@ -8,7 +8,7 @@ Class to parse with the JSON
  */
 public class Point { //Used to parse
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("longitude")
     public double longitude;
     @JsonProperty("latitude")

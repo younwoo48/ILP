@@ -2,22 +2,19 @@ package uk.ac.ed.inf;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 
 public class Restaurant {
     @JsonProperty("menu")
-    public Menu[] menu;
+    private Menu[] menu;
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("longitude")
-    public double longitude;
+    private double longitude;
     @JsonProperty("latitude")
-    public double latitude;
+    private double latitude;
 
     public Menu[] getMenu(){
         return menu;
