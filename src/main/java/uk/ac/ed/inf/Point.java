@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /*
 Class to parse with the JSON
  */
-public class Point { //Used to parse
+public class Point { //Used to create the border for the areas including the noFlyZones and to parse with the centralArea
     @JsonProperty("name")
     private String name;
     @JsonProperty("longitude")
