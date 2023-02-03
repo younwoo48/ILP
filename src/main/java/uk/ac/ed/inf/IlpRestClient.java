@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class IlpRestClient //Class to get live data from the Ilp REST Server or to create necessary files
 {
-    public URL baseUrl;
+    private URL baseUrl;
     public IlpRestClient(URL baseUrl) {
         this.baseUrl = baseUrl;
     }
@@ -57,6 +57,10 @@ public class IlpRestClient //Class to get live data from the Ilp REST Server or 
         }
         LineString lines = new LineString(geo_position.toArray(new LngLatAlt[0]));
         ObjectMapper mapper = new ObjectMapper();
+        File theDir = new File("resultfiles");
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
         mapper.writeValue(new File("resultfiles/drone-"+date+".geojson"),lines);
     }
 
@@ -73,6 +77,10 @@ public class IlpRestClient //Class to get live data from the Ilp REST Server or 
         for(Order order:orders){
             deliveries.add(new Delivery(order.orderNo, order.orderStatus, order.pizzaPrice));
         }
+        File theDir = new File("resultfiles");
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
         mapper.writeValue(new File("resultfiles/deliveries-"+date+".json"),deliveries);
     }
 
@@ -85,6 +93,10 @@ public class IlpRestClient //Class to get live data from the Ilp REST Server or 
      */
     public void recordFlightPath(ArrayList<FlightPath> flightPaths, String date) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        File theDir = new File("resultfiles");
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
         mapper.writeValue(new File("resultfiles/flightpath-"+date+".json"),flightPaths);
     }
 }

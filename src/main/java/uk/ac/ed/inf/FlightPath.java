@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FlightPath { //Flight path class to parse with the flightpath.json file
     @JsonProperty("orderNo")
-    public String orderNo;
+    private String orderNo;
     @JsonProperty("fromLongitude")
-    public Double fromLongitude;
+    private Double fromLongitude;
     @JsonProperty("fromLatitude")
-    public Double fromLatitude;
+    private Double fromLatitude;
     @JsonProperty("angle")
-    public Double angle;
+    private Double angle;
     @JsonProperty("toLongitude")
-    public Double toLongitude;
+    private Double toLongitude;
     @JsonProperty("toLatitude")
-    public Double toLatitude;
+    private Double toLatitude;
     @JsonProperty("ticksSinceStartOfCalculation")
-    public Integer ticksSinceStartOfCalculation;
+    private Integer ticksSinceStartOfCalculation;
 
     public FlightPath(String orderNo, Double fromLongitude, Double fromLatitude, Double angle, Double toLongitude, Double toLatitude, Integer ticksSinceStartOfCalculation){
         this.orderNo = orderNo;

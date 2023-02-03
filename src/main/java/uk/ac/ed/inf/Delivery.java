@@ -3,11 +3,11 @@ package uk.ac.ed.inf;
 import com.fasterxml.jackson.annotation.JsonProperty;
 public class Delivery { //Delivery Class used to output the delivery.json
     @JsonProperty("orderNo")
-    public String orderNo;
+    private String orderNo;
     @JsonProperty("outcome")
-    public String outcome;
+    private String outcome;
     @JsonProperty("costInPence")
-    public Integer costInPence;
+    private Integer costInPence;
     public Delivery(String orderNo, OrderOutcome outcome, Integer costInPence){
         this.orderNo = orderNo;
         this.outcome = outcome.toString();

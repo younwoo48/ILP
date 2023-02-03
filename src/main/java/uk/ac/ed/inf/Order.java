@@ -2,7 +2,6 @@ package uk.ac.ed.inf;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -31,7 +30,17 @@ public class Order {
     public int pizzaPrice = 0;
 
     public Restaurant restaurant=null;
+    /**
+    public Order(String orderDate, String creditCardNumber, String creditCardExpiry, String cvv, int priceTotalInPence, String[] orderItems){
+        this.orderDate = orderDate;
+        this.creditCardNumber = creditCardNumber;
+        this.creditCardExpiry = creditCardExpiry;
+        this.cvv = cvv;
+        this.priceTotalInPence = priceTotalInPence;
+        this.orderItems = orderItems;
 
+    }
+     **/
     /**
      * Check the details of credit card and changes the order outcome accordingly
      *

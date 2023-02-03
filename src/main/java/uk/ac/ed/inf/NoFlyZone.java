@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NoFlyZone {
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("coordinates")
-    public Double[][] coordinates;
+    private Double[][] coordinates;
 
     /**
      * Changes the instance of this NoFlyZone to an Area instance

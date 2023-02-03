@@ -52,14 +52,4 @@ public class Node { //Node class that stores the necessary data to be used in th
         }
         return false;
     }
-
-    /**
-     *
-     * @param newG
-     * Used to change the gScore to newG of this Node
-     */
-    public void changeG(double newG){
-        this.gScore = newG;
-        this.fScore = (this.gScore)*0.8+this.hScore;
-    }
 }
